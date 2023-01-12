@@ -1,0 +1,119 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : {},
+				"path" : "C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe",
+				"version" : ""
+			},
+			"language" : "ASM",
+			"sourceFileExtensions" : 
+			[
+				"s",
+				"S",
+				"asm"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0/include",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0/include-fixed",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/sys-include",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/include"
+					],
+					"linkDirectories" : 
+					[
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"gcc",
+						"c",
+						"nosys",
+						"c",
+						"gcc"
+					]
+				},
+				"path" : "C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe",
+				"version" : "11.2.0"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/include/c++/11.2.0",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/include/c++/11.2.0/xtensa-esp32s3-elf",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/include/c++/11.2.0/backward",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0/include",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0/include-fixed",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/sys-include",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/include"
+					],
+					"linkDirectories" : 
+					[
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc/xtensa-esp32s3-elf/11.2.0",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/lib/gcc",
+						"C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/xtensa-esp32s3-elf/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"m",
+						"gcc",
+						"c",
+						"nosys",
+						"c",
+						"gcc"
+					]
+				},
+				"path" : "C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-g++.exe",
+				"version" : "11.2.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
