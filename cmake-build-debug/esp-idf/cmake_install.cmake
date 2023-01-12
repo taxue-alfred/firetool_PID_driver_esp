@@ -399,6 +399,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/firetool_PID_adaptor/cmake_install.cmake")
 endif()
 

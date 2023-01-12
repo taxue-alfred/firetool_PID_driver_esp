@@ -605,6 +605,13 @@ D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/ma
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/main/CMakeFiles/install.dir
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/main/CMakeFiles/install/local.dir
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/main/CMakeFiles/install/strip.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/__idf_TransferLib.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/edit_cache.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/rebuild_cache.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/list_install_components.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/install.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/install/local.dir
+D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/TransferLib/CMakeFiles/install/strip.dir
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/firetool_PID_adaptor/CMakeFiles/__idf_firetool_PID_adaptor.dir
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/firetool_PID_adaptor/CMakeFiles/edit_cache.dir
 D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/firetool_PID_adaptor/CMakeFiles/rebuild_cache.dir
