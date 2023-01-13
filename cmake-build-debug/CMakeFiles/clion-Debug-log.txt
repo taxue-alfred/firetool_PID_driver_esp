@@ -1,19 +1,4 @@
 "C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.3.1/bin/ninja/win/ninja.exe" -G Ninja -S D:\Projects\PersonalProject\firetool_PID_driver_esp -B D:\Projects\PersonalProject\firetool_PID_driver_esp\cmake-build-debug
--- Found Git: C:/Program Files/Git/cmd/git.exe (found version "2.39.0.windows.2") 
--- The C compiler identification is GNU 11.2.0
--- The CXX compiler identification is GNU 11.2.0
--- The ASM compiler identification is GNU
--- Found assembler: C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: C:/Users/taxue/.espressif/tools/xtensa-esp32s3-elf/esp-2022r1-11.2.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-g++.exe - skipped
--- Detecting CXX compile features
--- Detecting CXX compile features - done
 -- Building ESP-IDF components for target esp32s3
 -- Checking Python dependencies...
 Python requirements are satisfied.
@@ -22,18 +7,7 @@ Requirement files:
  - D:\ESP-IDF\esp-idf\tools\requirements\requirements.core.txt
 Python being checked: C:\Users\taxue\.espressif\python_env\idf5.0_py3.11_env\Scripts\python.exe
 -- Project sdkconfig file D:/Projects/PersonalProject/firetool_PID_driver_esp/sdkconfig
--- Looking for sys/types.h
--- Looking for sys/types.h - found
--- Looking for stdint.h
--- Looking for stdint.h - found
--- Looking for stddef.h
--- Looking for stddef.h - found
--- Check size of time_t
--- Check size of time_t - done
--- Found Python3: C:/Users/taxue/AppData/Local/Programs/Python/Python311/python.exe (found version "3.11.1") found components: Interpreter 
--- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
--- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
--- App "firetool_PID_driver_esp" version: d19cbd0-dirty
+-- App "firetool_PID_driver_esp" version: b9e4af9-dirty
 -- Adding linker script D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/esp_system/ld/memory.ld
 -- Adding linker script D:/ESP-IDF/esp-idf/components/esp_system/ld/esp32s3/sections.ld.in
 -- Adding linker script D:/ESP-IDF/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.ld

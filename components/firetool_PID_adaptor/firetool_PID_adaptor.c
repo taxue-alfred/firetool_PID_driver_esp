@@ -4,6 +4,12 @@
 
 #include "firetool_PID_adaptor.h"
 
+/**
+ * @brief 底层的回调函数，负责处理数据
+ * @param adaptor_uart 底层串口类
+ * @param data 底层返回的数据
+ * @param len 底层读取到的数据长度
+ */
 void uart_received_data_cb(AdaptorUart * adaptor_uart, char * data, int len)
 {
     //从父类指针转换到子类指针
@@ -29,17 +35,45 @@ void uart_received_data_cb(AdaptorUart * adaptor_uart, char * data, int len)
                 int32_t package_length = low_bit_front_transfer_int32(package_length_source);
                 i = i + 4;
                 char command = data_rev[i];
-                //最后一位校验，即校验和不进行编写
-                printf("%d\n", command);
+                //最后一位校验位，即校验和不进行编写
                 switch (command) {
-                    case 0x12:
+                    case 0x12: //启动
                         fta_cb_p->fta_received_start_cb(channel);
                         break;
-                    case 0x13:
+                    case 0x13: //停止
                         fta_cb_p->fta_received_stop_cb(channel);
                         break;
-                    case 0x14:
+                    case 0x14: //复位
                         fta_cb_p->fta_received_reset_cb(channel);
+                        break;
+                    case 0x11: //目标值
+                        i = i + 1;
+                        char data_command_source[4] = {0};
+                        memcpy(data_command_source, &data_rev[i], 4);
+                        int32_t data_command = low_bit_front_transfer_int32(data_command_source);
+                        fta_cb_p->fta_received_targetValue(channel, data_command);
+                        break;
+                    case 0x15: //周期
+                        i = i + 1;
+                        char data_command_source_period[4] = {0};
+                        memcpy(data_command_source_period, &data_rev[i], 4);
+                        int32_t data_command_period = low_bit_front_transfer_int32(data_command_source_period);
+                        fta_cb_p->fta_received_periodValue(channel, data_command_period);
+                        break;
+                    case 0x10: //PID值
+                        i = i + 1;
+                        char p_data_source[4] = {0};
+                        char i_data_source[4] = {0};
+                        char d_data_source[4] = {0};
+                        memcpy(p_data_source, &data_rev[i], 4);
+                        float p_data = low_bit_front_transfer_float(p_data_source);
+                        i = i + 4;
+                        memcpy(i_data_source, &data_rev[i], 4);
+                        float i_data = low_bit_front_transfer_float(i_data_source);
+                        i = i + 4;
+                        memcpy(d_data_source, &data_rev[i], 4);
+                        float d_data = low_bit_front_transfer_float(d_data_source);
+                        fta_cb_p->fta_received_PID(channel, p_data, i_data, d_data);
                         break;
                     default:
                         printf("Incompatible instruction! Please create an issue on Github!\n");
@@ -74,6 +108,26 @@ void fta_set_received_reset_cb(FireToolPIDAdaptor * fta_class,
     if (func != NULL) fta_class->fta_received_reset_cb = func;
 }
 
+//目标值
+void fta_set_received_targetValue(FireToolPIDAdaptor * fta_class,
+                                  void(*func)(unsigned char channel, int32_t targetValue))
+{
+    if (func != NULL) fta_class->fta_received_targetValue = func;
+}
+
+//周期
+void fta_set_received_periodValue(FireToolPIDAdaptor * fta_class,
+                                  void (*func)(unsigned char channel, int32_t periodValue))
+{
+    if (func != NULL) fta_class->fta_received_periodValue = func;
+}
+
+void fta_set_received_PID(FireToolPIDAdaptor * fta_class,
+                          void (*func)(unsigned char channel, float P, float I, float D))
+{
+    if (func != NULL) fta_class->fta_received_PID = func;
+}
+
 void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin, int tx_pin,
               int uart_num, int buffer_size)
 {
@@ -86,6 +140,7 @@ void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin, int tx_
         assert("The lib can`t run on this platform, please create an issue on Github!\n");
 
     if (fta_class->fta_received_start_cb == NULL || fta_class->fta_received_stop_cb == NULL ||
-    fta_class->fta_received_reset_cb == NULL)
+    fta_class->fta_received_reset_cb == NULL || fta_class->fta_received_targetValue == NULL ||
+    fta_class->fta_received_periodValue == NULL)
         assert("The callback function of firetool_PID_adaptor not be assigned by self-defined function.\n");
 }

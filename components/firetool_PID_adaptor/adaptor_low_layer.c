@@ -7,10 +7,11 @@
 //接收到数据之后的回调函数
 void (*received_data_cb)(AdaptorUart * adaptor_uart, char * data, int len);
 
+//串口事件队列
 QueueHandle_t uart1_queue;
 
 /**
- * @brief 时间监听函数，可以理解为中断读取数据
+ * @brief 事件监听函数，可以理解为中断读取数据
  * @param pvPara
  */
 void uart_event_task(void * pvPara)
@@ -66,12 +67,13 @@ void au_set_received_cb(AdaptorUart * adaptor_uart,
  * @param rx_pin 接收引脚
  * @param tx_pin 发送引脚
  * @param uart_num 串口编号
- * @param buffer_size 接收发送缓冲区大小
- * @note 为了防止FreeRTOS发送串口数据时阻塞任务，所以发送缓冲区大小并未开放单独设置
+ * @param buffer_size 接收发送缓冲区大小，此值不得小于1024
+ * @note 为了防止FreeRTOS发送串口数据时阻塞任务，所以发送接收缓冲区大小并未开放单独设置
  */
 void au_init_uart(AdaptorUart * adaptor_uart, int band_rate, int rx_pin,
                   int tx_pin, int uart_num, int buffer_size)
 {
+    //设置串口参数
     adaptor_uart->uart_config.baud_rate = band_rate;
     adaptor_uart->uart_config.data_bits = UART_DATA_8_BITS;
     adaptor_uart->uart_config.parity = UART_PARITY_DISABLE;
@@ -81,7 +83,6 @@ void au_init_uart(AdaptorUart * adaptor_uart, int band_rate, int rx_pin,
 
     //存储必要值
     adaptor_uart->uart_num = uart_num;
-    adaptor_uart->buffer_size = buffer_size;
 
     //set uart param
     ESP_ERROR_CHECK(uart_param_config(uart_num, &adaptor_uart->uart_config));
@@ -121,13 +122,14 @@ int au_uart_send_bytes(AdaptorUart * adaptor_uart, char * contents, int len)
  * @brief 接收字节函数
  * @param adaptor_uart 串口类
  * @param data 存放接收内容的内存空间
- * @param max_len 内存空间大小
- * @return 本次接收的字节个数，如果缓存已有的数据大于已分配内存空间大小，则只返回内存空间大小的数据，
+ * @param max_len 存放接收内容的内存空间大小
+ * @return 本次接收的字节个数，如果缓存已有的数据大于max_len，则只返回max_len大小的数据，
  * 反之则返回缓冲区的全部数据
  */
 int au_uart_read_bytes(AdaptorUart * adaptor_uart, char * data, int max_len)
 {
     int rev_data_len = 0;
+    //检查接收缓冲区中是否有数据
     ESP_ERROR_CHECK(uart_get_buffered_data_len(adaptor_uart->uart_num, (size_t*)&rev_data_len));
     if(rev_data_len != 0){
         if(rev_data_len <= max_len)
