@@ -7,7 +7,7 @@ Requirement files:
  - D:\ESP-IDF\esp-idf\tools\requirements\requirements.core.txt
 Python being checked: C:\Users\taxue\.espressif\python_env\idf5.0_py3.11_env\Scripts\python.exe
 -- Project sdkconfig file D:/Projects/PersonalProject/firetool_PID_driver_esp/sdkconfig
--- App "firetool_PID_driver_esp" version: b9e4af9-dirty
+-- App "firetool_PID_driver_esp" version: 8ee7654-dirty
 -- Adding linker script D:/Projects/PersonalProject/firetool_PID_driver_esp/cmake-build-debug/esp-idf/esp_system/ld/memory.ld
 -- Adding linker script D:/ESP-IDF/esp-idf/components/esp_system/ld/esp32s3/sections.ld.in
 -- Adding linker script D:/ESP-IDF/esp-idf/components/esp_rom/esp32s3/ld/esp32s3.rom.ld
