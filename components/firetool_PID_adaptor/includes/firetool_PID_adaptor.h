@@ -60,4 +60,30 @@ void fta_set_received_PID(FireToolPIDAdaptor * fta_class,
 void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin,
               int tx_pin,int uart_num, int buffer_size);
 
+//发送开始指令
+int fta_send_start_cmd(FireToolPIDAdaptor * fta_class, unsigned char channel);
+
+//发送结束指令
+int fta_send_stop_cmd(FireToolPIDAdaptor * fta_class, unsigned char channel);
+
+//发送目标值
+int fta_send_targetValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t targetValue);
+
+//发送周期值
+int fta_send_periodValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t periodValue);
+
+//发送PID值
+int fta_send_PID(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                 float P, float I, float D);
+
+//发送实际值
+int fta_send_actualValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t actualValue);
+
+/**辅助功能函数区**/
+//校验和计算
+int sum_auth_for_bytes(const char * source, unsigned char len);
+
 #endif //FIRETOOL_PID_DRIVER_ESP_FIRETOOL_PID_ADAPTOR_H

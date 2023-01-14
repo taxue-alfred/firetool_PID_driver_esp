@@ -88,46 +88,83 @@ void uart_received_data_cb(AdaptorUart * adaptor_uart, char * data, int len)
     }
 }
 
+/**
+ * @brief 设置接收到“启动”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_start_cb(FireToolPIDAdaptor * fta_class,
                                void (*func)(unsigned char channel))
 {
     if (func != NULL) fta_class->fta_received_start_cb = func;
 }
 
-//停止
+/**
+ * @brief 设置接收到“停止”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_stop_cb(FireToolPIDAdaptor * fta_class,
                               void (*func)(unsigned char channel))
 {
     if (func != NULL) fta_class->fta_received_stop_cb = func;
 }
 
-//复位
+/**
+ * @brief 设置接收到“复位”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_reset_cb(FireToolPIDAdaptor * fta_class,
                                void (*func)(unsigned char channel))
 {
     if (func != NULL) fta_class->fta_received_reset_cb = func;
 }
 
-//目标值
+/**
+ * @brief 设置接收到“设定目标值”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_targetValue(FireToolPIDAdaptor * fta_class,
                                   void(*func)(unsigned char channel, int32_t targetValue))
 {
     if (func != NULL) fta_class->fta_received_targetValue = func;
 }
 
-//周期
+/**
+ * @brief 设置接收到“发送周期”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_periodValue(FireToolPIDAdaptor * fta_class,
                                   void (*func)(unsigned char channel, int32_t periodValue))
 {
     if (func != NULL) fta_class->fta_received_periodValue = func;
 }
 
+/**
+ * @brief 设置接收到“发送PID”命令的回调函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param func 自定义回调函数
+ */
 void fta_set_received_PID(FireToolPIDAdaptor * fta_class,
                           void (*func)(unsigned char channel, float P, float I, float D))
 {
     if (func != NULL) fta_class->fta_received_PID = func;
 }
 
+/**
+ * @brief FireToolPIDAdaptor初始化函数
+ * @param fta_class FireToolPIDAdaptor类
+ * @param band_rate 波特率
+ * @param rx_pin RX引脚
+ * @param tx_pin TX引脚
+ * @param uart_num 串口编号
+ * @param buffer_size 接收发送缓冲区大小，此值不得小于1024
+ * @note 为了防止FreeRTOS发送串口数据时阻塞任务，所以发送接收缓冲区大小并未开放单独设置
+ * @note 调用此函数前务必先设置回调函数！！！！！
+ */
 void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin, int tx_pin,
               int uart_num, int buffer_size)
 {
@@ -136,11 +173,293 @@ void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin, int tx_
                  tx_pin, uart_num, buffer_size);
 
     //必要性检查
-    if (fta_class != &fta_class->adaptorUart)
+    if ((void *)fta_class != (void *)&fta_class->adaptorUart)
         assert("The lib can`t run on this platform, please create an issue on Github!\n");
 
     if (fta_class->fta_received_start_cb == NULL || fta_class->fta_received_stop_cb == NULL ||
     fta_class->fta_received_reset_cb == NULL || fta_class->fta_received_targetValue == NULL ||
     fta_class->fta_received_periodValue == NULL)
         assert("The callback function of firetool_PID_adaptor not be assigned by self-defined function.\n");
+}
+
+/**
+ * @brief 发送开始指令
+ * @param fta_class FireToolPIDAdaptor类
+ * @param channel 通道
+ * @return 已发送字节数
+ */
+int fta_send_start_cmd(FireToolPIDAdaptor * fta_class, unsigned char channel)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x04;
+    len += 1; //指令占一个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 发送停止指令
+ * @param fta_class FireToolPIDAdaptor类
+ * @param channel 通道
+ * @return 已发送字节数
+ */
+int fta_send_stop_cmd(FireToolPIDAdaptor * fta_class, unsigned char channel)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x05;
+    len += 1; //指令占一个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 发送目标值
+ * @param fta_class FireToolPIDAdaptor类
+ * @param channel 通道
+ * @param targetValue 目标值
+ * @return 已发送的字节数
+ */
+int fta_send_targetValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t targetValue)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x01;
+    len += 1; //指令占一个字节
+    len += 4; //数据占四个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+    memcpy(assign_package, &targetValue, 4);
+    assign_package += 4;
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 发送周期值
+ * @param fta_class FireToolPIDAdaptor类
+ * @param channel 通道
+ * @param periodValue 周期值
+ * @return 已发送的字节数
+ */
+int fta_send_periodValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t periodValue)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x06;
+    len += 1; //指令占一个字节
+    len += 4; //数据占四个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+    memcpy(assign_package, &periodValue, 4);
+    assign_package += 4;
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 发送PID参数
+ * @param fta_class FireToolPIDAdaptor
+ * @param channel 通道
+ * @param P P参数
+ * @param I I参数
+ * @param D D参数
+ * @return 已发送的字节数
+ */
+int fta_send_PID(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                 float P, float I, float D)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x03;
+    len += 1; //指令占一个字节
+    len += 12; //数据占12个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+    memcpy(assign_package, &P, 4);
+    assign_package += 4;
+    memcpy(assign_package, &I, 4);
+    assign_package += 4;
+    memcpy(assign_package, &D, 4);
+    assign_package += 4;
+
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 发送实际值
+ * @param fta_class FireToolPIDAdaptor
+ * @param channel 通道
+ * @param actualValue 实际值
+ * @return 已发送的字节数
+ */
+int fta_send_actualValue(FireToolPIDAdaptor * fta_class, unsigned char channel,
+                         uint32_t actualValue)
+{
+    int len = 0;
+    char pkg_head[4] = {0x53, 0x5a, 0x48, 0x59};
+    len += 4; //包头数
+    len += 1; //channel变量已有，长度直接加1
+    len += 4; //包长度占四个字节
+    char pkg_cmd = 0x02;
+    len += 1; //指令占一个字节
+    len += 4; //数据占四个字节
+    char sum_auth = 0;
+    len += 1; //校验占一个字节
+
+    //先构成整个数据包，再进行校验和计算
+    char * package = (char * ) malloc(len);
+    char * assign_package = package;
+    memcpy(assign_package, pkg_head, 4);
+    assign_package += 4;
+    memcpy(assign_package, &channel, 1);
+    assign_package += 1;
+    memcpy(assign_package, &len, 4);
+    assign_package += 4;
+    memcpy(assign_package, &pkg_cmd, 1);
+    assign_package += 1;
+    memcpy(assign_package, &actualValue, 4);
+    assign_package += 4;
+
+    sum_auth = (char)sum_auth_for_bytes(package, len - 1);
+    memcpy(assign_package, &sum_auth, 1);
+
+    int send_number = au_uart_send_bytes(&fta_class->adaptorUart, package, len);
+    if (send_number != len) assert("已有数据长度和发送数据长度不匹配！");
+
+    free(package);
+    return send_number;
+}
+
+/**
+ * @brief 校验和计算
+ * @param source 需要计算的校验和，传入数组形式
+ * @param len 传入数据的字节长度
+ * @return 计算结果
+ */
+int sum_auth_for_bytes(const char * source, unsigned char len)
+{
+    int sum= 0;
+    for (int i = 0; i < len; ++i) {
+        sum += source[i];
+    }
+    return sum;
 }

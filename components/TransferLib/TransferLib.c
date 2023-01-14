@@ -8,7 +8,7 @@
  * @brief 多字节数据低字节在前转换int32
  * @param source 源数据
  * @return 转换值
- * @note 这里的int32是四位的
+ * @note 这里的int32是四字节的
  */
 int32_t low_bit_front_transfer_int32(char * source)
 {
@@ -22,7 +22,7 @@ int32_t low_bit_front_transfer_int32(char * source)
  * 多字节数据低字节在前转换float
  * @param source 源数据
  * @return 转换值
- * @note 这里的float是四位的
+ * @note 这里的float是四字节的
  */
 float low_bit_front_transfer_float(char * source)
 {
