@@ -67,7 +67,7 @@ typedef struct{
 
 此函数主要是对上面说过的类结构体中的`uart_config_t` 以及其他成员进行赋值操作，然后安装串口（取决于MCU的开发方式）
 
-本库源代码：
+本库部分源代码：
 
 ```c
 void au_init_uart(AdaptorUart * adaptor_uart, int band_rate, int rx_pin,
@@ -190,3 +190,7 @@ void uart_event_task(void * pvPara)
     }
 }
 ```
+
+## 5. 协议参考
+
+[电机PID控制补充篇-野火上位机串口协议介绍](https://blog.csdn.net/hbsyaaa/article/details/123966179)
