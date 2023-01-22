@@ -7,6 +7,7 @@
 
 #include <esp_log.h>
 #include "driver/uart.h"
+#include "stdlib.h"
 
 /**
  *  本库使用面向对象方式编程，理论支持多实例，但未进行多实例测试。

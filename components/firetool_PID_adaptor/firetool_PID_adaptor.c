@@ -84,7 +84,8 @@ void uart_received_data_cb(AdaptorUart * adaptor_uart, char * data, int len)
 
         free(data_rev);
     }else{
-        assert("malloc the memory failed!\n");
+        printf("malloc the memory failed!\n");
+        exit(0);
     }
 }
 
@@ -173,13 +174,16 @@ void fta_init(FireToolPIDAdaptor * fta_class, int band_rate, int rx_pin, int tx_
                  tx_pin, uart_num, buffer_size);
 
     //必要性检查
-    if ((void *)fta_class != (void *)&fta_class->adaptorUart)
-        assert("The lib can`t run on this platform, please create an issue on Github!\n");
+    if ((void *)fta_class != (void *)&fta_class->adaptorUart) {
+        printf("The lib can`t run on this platform, please create an issue on Github!\n");
+        exit(0);
+    }
 
-    if (fta_class->fta_received_start_cb == NULL || fta_class->fta_received_stop_cb == NULL ||
-    fta_class->fta_received_reset_cb == NULL || fta_class->fta_received_targetValue == NULL ||
-    fta_class->fta_received_periodValue == NULL)
-        assert("The callback function of firetool_PID_adaptor not be assigned by self-defined function.\n");
+    assert(fta_class->fta_received_start_cb);
+    assert(fta_class->fta_received_stop_cb);
+    assert(fta_class->fta_received_reset_cb);
+    assert(fta_class->fta_received_targetValue);
+    assert(fta_class->fta_received_periodValue);
 }
 
 /**

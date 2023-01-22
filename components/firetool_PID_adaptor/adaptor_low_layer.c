@@ -39,7 +39,8 @@ void uart_event_task(void * pvPara)
 
                     free(received_data);
                 }else{
-                    assert("malloc the memory failed!\n");
+                    printf("malloc the memory failed!\n");
+                    exit(0);
                 }
             }
         }
@@ -56,8 +57,10 @@ void au_set_received_cb(AdaptorUart * adaptor_uart,
                                      char * data, int len))
 {
     if (func != NULL) received_data_cb = func;
-    else
-        assert("UART received callback function be assigned failed.\n");
+    else{
+        printf("UART received callback function be assigned failed.\n");
+        exit(0);
+    }
 }
 
 /**
@@ -98,7 +101,8 @@ void au_init_uart(AdaptorUart * adaptor_uart, int band_rate, int rx_pin,
 
     //回调函数空检查
     if (received_data_cb == NULL){
-        assert("The callback function of adaptor_low_layer not be assigned by self-defined function.\n");
+        printf("The callback function of adaptor_low_layer not be assigned by self-defined function.\n");
+        exit(0);
     }
 
     //创建串口监听
